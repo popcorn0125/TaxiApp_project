@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, Alert, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation, ParamListBase } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 const NickNameScreen = () => {
     const [nickname, setNickname] = useState('')
     const[inputNickname, setInputNickname] = useState('')
+    const [userId, setUserId] = useState('')
 
     useEffect(() => {
         const loadNickname = async () => {
@@ -19,8 +22,29 @@ const NickNameScreen = () => {
             }
         }
 
+        const loadUserId = async () => {
+            try {
+                const storedUserId = await AsyncStorage.getItem('userId')
+                if(storedUserId !== null) {
+                    setUserId(storedUserId)
+                }
+            }
+            catch(error) {
+                console.error('Failed to load userId', error)
+            }
+        }
+
         loadNickname()
+        loadUserId()
     })
+
+    const navigation = useNavigation<StackNavigationProp<ParamListBase>>()
+
+    const onLogOut = () => {
+        AsyncStorage.removeItem('userId').then(()=> {
+            navigation.popToTop()
+        })
+    }
 
     const saveNickname = async () => {
         if(inputNickname === '') {
@@ -31,7 +55,9 @@ const NickNameScreen = () => {
         try{
             await AsyncStorage.setItem('nickname', inputNickname)
             setNickname(inputNickname)
-            Alert.alert('성공','닉네임이 저장되었습니다.')
+            // Alert.alert('성공','닉네임이 저장되었습니다.')
+            await AsyncStorage.setItem('preLoginUserId', userId)
+            onLogOut()
         }
         catch(error) {
             console.error('Failed to save nickname', error)

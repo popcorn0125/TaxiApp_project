@@ -16,12 +16,16 @@ function Intro() : JSX.Element {
     setTimeout(async ()=> {
 
         let userId = await AsyncStorage.getItem('userId')
-
+        let autoLogin = await AsyncStorage.getItem('AutoLogin')
         let isAutoLogin = userId ? true : false
 
-        if(isAutoLogin) {
+        if(isAutoLogin && autoLogin == '1') {
             navigation.push("Main")
-        } else {
+        }
+        else if(isAutoLogin && autoLogin == '0') {
+            navigation.push("Main_Setting")
+        } 
+        else {
             navigation.push("Login")
         }
     }, 2000)

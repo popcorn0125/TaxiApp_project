@@ -7,6 +7,8 @@ import Main from './Main'
 import Login from "./Login";
 import Register from "./Register";
 import NickNameScreen from "./Main_Setting_NickName";
+import AutoLoginAlert from './AutoLoginAlert';
+import Main_Setting from "./Main_Setting";
 
 function TaxiApp() : JSX.Element {
     console.log("-- TaxiApp()")
@@ -26,6 +28,10 @@ function TaxiApp() : JSX.Element {
                 options={{headerShown: false}} />
                 <Stack.Screen name='NickName' component={NickNameScreen}
                 options={{headerShown: false}} />
+                <Stack.Screen name='LoginAlert' component={AutoLoginAlert}
+                options={{headerShown: false}} />
+                <Stack.Screen name="Main_Setting" component={Main_Setting} 
+                options={{ headerLeft: () => null, title:'환경설정'}}/>
             </Stack.Navigator>
         </NavigationContainer>
     )
