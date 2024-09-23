@@ -1,3 +1,7 @@
+CREATE USER 'taxi'@'%' IDENTIFIED BY 'taxi';
+GRANT ALL PRIVILEGES ON taxi.* TO 'taxi'@'%' IDENTIFIED BY 'taxi';
+FLUSH PRIVILEGES;
+
 CREATE TABLE tb_user (
     user_id VARCHAR(10) NOT NULL,
     user_pw VARCHAR(10) NOT NULL,
@@ -24,3 +28,6 @@ CREATE TABLE tb_call (
 	call_state VARCHAR(10) NOT NULL,
 	driver_id VARCHAR(10)
 );
+
+ALTER TABLE tb_call
+ADD COLUMN request_time TIMESTAMP DEFAULT current_timestamp
