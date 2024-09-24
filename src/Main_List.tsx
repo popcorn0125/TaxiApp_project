@@ -1,10 +1,12 @@
-import { SafeAreaView, StyleSheet, Text, View, FlatList, Modal } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View, FlatList, Modal, Alert } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import React from "react";
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { RefreshControl } from "react-native-gesture-handler";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import api from "./API";
 
 function Main_List() : JSX.Element {
 
@@ -17,20 +19,31 @@ function Main_List() : JSX.Element {
     const [callList, setCallList] = useState([])
     const [loading, setLoading] = useState(false)
 
-    const requestCallList = () => {
+    const requestCallList = async () => {
         setLoading(true)
 
-        setTimeout(()=>{
-            let tmp : any = []
-            
-            for(var i = 0; i< 10; i++) {
-                let row = {id:1, start_addr : '출발주소', end_addr:'도착주소', call_state: 'REQ'}
-                tmp.push(row)
-            }
+        let userId = await AsyncStorage.getItem('userId') || ""
 
-            setCallList(tmp)
+        api.list(userId)
+        .then(response => {
+            let {code, message, data} = response.data[0]
+            if(code == 0) {
+                setCallList(data)
+            }
+            else {
+                Alert.alert('오류', message, [{
+                    text: '확인',
+                    onPress: () => console.log('cancel pressed'),
+                    style: 'cancel'
+                }])
+            }
             setLoading(false)
-        }, 200)
+        })
+        .catch( err => {
+            console.log(JSON.stringify(err))
+            setLoading(false)
+        })
+        
 
     }
 
@@ -52,6 +65,7 @@ function Main_List() : JSX.Element {
             <View style={{width:wp(80)}}>
                 <Text style={styles.textForm}>{row.item.start_addr}</Text>
                 <Text style={[styles.textForm, {borderTopWidth:0}]}>{row.item.end_addr}</Text>
+                <Text style={[styles.textForm]}>{row.item.formatted_time}</Text>
             </View>
             <View style={{width:wp(20), alignItems: 'center', justifyContent: 'center'}}>
                 <Text >{row.item.call_state}</Text>

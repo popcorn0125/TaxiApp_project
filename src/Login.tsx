@@ -67,7 +67,8 @@ function Login() : JSX.Element {
                 <Icon name='taxi' size={80} color={'#3498db'}/>
             </View>
             <View style={styles.container}>
-                <TextInput style={styles.input} placeholder={"아이디"}/>
+                <TextInput style={styles.input} placeholder={"아이디"}
+                onChangeText={onIdChange}/>
                 
                 <TextInput style={styles.input} placeholder={"패스워드"} secureTextEntry={true} 
                 onChangeText={onPwChange}/>
