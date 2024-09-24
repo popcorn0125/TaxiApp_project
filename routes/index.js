@@ -146,7 +146,22 @@ router.post('/taxi/list', function(req,res) {
     if(!err) {
       console.log('list / rows = ' + JSON.stringify(rows))
       let code = 0
+
+      rows = rows.map(row => {
+        const requestTime = new Date(row.request_time)
+        const today = new Date()
+        const isToday = requestTime.toDateString()
+
+        const formattedDate = requestTime.toISOString().split('T')[0] // YYYY-MM-DD
+        const formattedTime = requestTime.toTimeString().split(' ')[0].slice(0,5) // HH:mm
+        
+        row.formatted_time = isToday ? formattedTime: formattedDate;
+        
+        return row;
+      })
+
       res.json([{code: code, message: '택시 호출 목록 호출 성공', data: rows}])
+
     }
     else {
       console.log('list / err = ' + err)
@@ -342,5 +357,15 @@ const sendFcm = (FcmToken, msg) => {
     console.log('-- push error / ' + JSON.stringify(error) )
   })
 }
+
+router.get('/get', function(req,res) {
+  const quertStr = `select * from test order by a DESC`
+  db.query(quertStr, function(err, rows, fields) {
+    res.json([{code:200, message: '값 불러오기 성공',data:rows}])
+    if(err) {
+      res.json([{code:500, message: 'internal Server error!'}])
+    } 
+  })
+})
 
 module.exports = router;
