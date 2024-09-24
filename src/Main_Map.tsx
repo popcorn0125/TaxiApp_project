@@ -2,9 +2,14 @@ import { SafeAreaView, StyleSheet, Text, View, TextInput, TouchableOpacity } fro
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation, ParamListBase } from "@react-navigation/native";
+import { StackNavigationProp } from "@react-navigation/stack";
 
 function Main_Map() : JSX.Element {
     console.log("-- Main_Map()")
+
+    const navigation = useNavigation<StackNavigationProp<ParamListBase>>()
 
     const [showBtn, setShowBtn] = useState(false)
 
@@ -14,6 +19,13 @@ function Main_Map() : JSX.Element {
 
     const handleAddMarker = (title:string) => {
         setShowBtn(false)
+    }
+
+    const gotoSetting = async () => {
+        let autoLogin = await AsyncStorage.getItem('AutoLogin')
+        if(autoLogin == '0') {
+            navigation.navigate('Main_Setting')
+        }
     }
 
     return ( 
@@ -31,7 +43,7 @@ function Main_Map() : JSX.Element {
                         <TextInput style={styles.input} placeholder={'출발지'}/>
                         <TextInput style={styles.input} placeholder={'도착지'}/>
                     </View>
-                    <TouchableOpacity style={[styles.button, {marginLeft:10, justifyContent:'center'}]}>
+                    <TouchableOpacity style={[styles.button, {marginLeft:10, justifyContent:'center'}]} onPress={gotoSetting}>
                         <Text style={styles.buttonText}>호출</Text>
                     </TouchableOpacity>
                 </View>

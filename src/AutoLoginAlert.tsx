@@ -19,7 +19,7 @@ function AutoLoginAlert() : JSX.Element {
 
     const gotoMainSetting = () => {
         AsyncStorage.setItem('AutoLogin', '0').then( ()=>{
-            navigation.push('Main_Setting')
+            navigation.push('Main')
         })
     }
 

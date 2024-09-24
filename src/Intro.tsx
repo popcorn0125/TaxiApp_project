@@ -22,11 +22,14 @@ function Intro() : JSX.Element {
         if(isAutoLogin && autoLogin == '1') {
             navigation.push("Main")
         }
-        else if(isAutoLogin && autoLogin == '0') {
-            navigation.push("Main_Setting")
-        } 
+        // else if(isAutoLogin && autoLogin == '0') {
+        //     navigation.push("Main_Setting")
+        // } 
         else {
-            navigation.push("Login")
+            AsyncStorage.removeItem('userId').then(()=> {
+                navigation.push("Login")
+                
+            })
         }
     }, 2000)
    }, []))
