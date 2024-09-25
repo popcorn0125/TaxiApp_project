@@ -193,7 +193,7 @@ router.post('/taxi/call', function(req,res) {
 
    console.log('call / queryString = ' + queryStr)
    
-   db.query(queryStr, function(err, rows, fields) {
+    db.query(queryStr, function(err, rows, fields) {
     if(!err) {
       console.log('call / rows = ' + JSON.stringify(rows))
 
@@ -346,9 +346,9 @@ router.post('/push/test', function(req,res,next) {
 
 
 
-const sendFcm = (FcmToken, msg) => {
-  const message={notification: {title:'알림', body:msg}, token: FcmToken}
-
+const sendFcm = (fcmToken, msg) => {
+  const message={notification: {title:'알림', body:msg}, token: fcmToken}
+  console.log("message : " + JSON.stringify(message))
   admin.messaging().send(message)
   .then((response) => {
     console.log('---push 성공')
