@@ -23,7 +23,7 @@ const updateFcm = (fcmToken, table, idColName, id) => {
 
 
 const sendPushToAlldriver = () => {
-  let quertStr = `SELECT fcm_token from tb_driver`
+  let quertStr = 'SELECT fcm_token from tb_driver'
   
   console.log('>> queryStr = ' + quertStr)
   
@@ -312,7 +312,7 @@ router.post('/driver/accept', function(req, res) {
     return
   }
 
-  let quertStr = `UPDATE tb_call set driver_id="${driverId}", call_state="RES" WHERE id="${callId}"`
+  let quertStr = `UPDATE tb_call set driver_id="${driverId}", call_state="RES" WHERE id=${callId}`
   console.log('driver-accept / quertStr = ' + quertStr)
 
   db.query(quertStr, function(err, rows, fields) {

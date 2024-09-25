@@ -12,10 +12,14 @@ var app = express();
 const db = require('./database/db_connect')
 db.connect()
 
-var admin = require('firebase-admin')
+var admin = require("firebase-admin");
+
+var serviceAccount = require("./call-taxi-servicesAccountKeys.json");
+
 admin.initializeApp({
-  credential: admin.credential.cert(require('./call-taxi-ServiceAccountKey.json'))
-})
+  credential: admin.credential.cert(serviceAccount)
+});
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
