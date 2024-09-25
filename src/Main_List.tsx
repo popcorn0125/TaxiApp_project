@@ -1,12 +1,14 @@
 import { SafeAreaView, StyleSheet, Text, View, FlatList, Modal, Alert } from "react-native";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import React from "react";
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { RefreshControl } from "react-native-gesture-handler";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import api from "./API";
+import messaging from '@react-native-firebase/messaging'
+
 
 function Main_List() : JSX.Element {
 
@@ -14,6 +16,15 @@ function Main_List() : JSX.Element {
         requestCallList()
     },[]))
 
+    useEffect( () => {
+        const message = messaging().onMessage(remoteMessage => {
+            console.log('[Remote Message] ', JSON.stringify(remoteMessage))
+            requestCallList()
+        })
+
+        return message
+    })
+    
     console.log("-- Main_List()")
 
     const [callList, setCallList] = useState([])
@@ -68,11 +79,14 @@ function Main_List() : JSX.Element {
                 <Text style={[styles.textForm]}>{row.item.formatted_time}</Text>
             </View>
             <View style={{width:wp(20), alignItems: 'center', justifyContent: 'center'}}>
-                <Text >{row.item.call_state}</Text>
+                { row.item.call_state=="RES" ? 
+                (<Text style={{color:'blue'}}>{row.item.call_state}</Text>) : 
+                (<Text style={{color:'gray'}}>{row.item.call_state}</Text>) }
             </View>
         </View>
        )
-    }  
+    }
+    
     
 
     return (

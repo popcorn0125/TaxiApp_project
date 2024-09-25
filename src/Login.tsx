@@ -38,8 +38,9 @@ function Login() : JSX.Element {
         .finally
     }
 
-    const onLogin = () => {
-        api.login(userId, userPw)
+    const onLogin = async () => {
+        let fcmToken = await AsyncStorage.getItem('fcmToken') || ""
+        api.login(userId, userPw, `${fcmToken}`)
         .then( response => {
             console.log('API login / data = ' + JSON.stringify(response.data[0]))
             let {code, message} = response.data[0]

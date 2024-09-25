@@ -4,6 +4,7 @@ import {useState} from 'react';
 import { useNavigation, ParamListBase} from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import api from './API'
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
 function Register() : JSX.Element {
@@ -23,8 +24,9 @@ function Register() : JSX.Element {
         }
     }
 
-    const onRegister = () => {
-        api.register(userId, userPw)
+    const onRegister = async () => {
+        let fcmToken = await AsyncStorage.getItem('fcmToken') || ""
+        api.register(userId, userPw, `${fcmToken}`) // ``(백틱)을 사용하는 이유 : string으로 가져오기 위해서 사용함.
         .then( response => {
             let {code, message} = response.data[0]
             let title = "알림"
