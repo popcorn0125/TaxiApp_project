@@ -11,30 +11,21 @@ import messaging from '@react-native-firebase/messaging'
 
 
 function Main_List() : JSX.Element {
-
-    useFocusEffect(React.useCallback(()=>{
-        requestCallList()
-    },[]))
-
-    useEffect( () => {
-        const message = messaging().onMessage(remoteMessage => {
-            console.log('[Remote Message] ', JSON.stringify(remoteMessage))
-            requestCallList()
-        })
-
-        return message
-    })
-    
     console.log("-- Main_List()")
 
     const [callList, setCallList] = useState([])
     const [loading, setLoading] = useState(false)
 
+    useFocusEffect(React.useCallback(()=>{
+        requestCallList()
+    },[]))
+
+    
     const requestCallList = async () => {
         setLoading(true)
-
+        
         let userId = await AsyncStorage.getItem('userId') || ""
-
+        
         api.list(userId)
         .then(response => {
             let {code, message, data} = response.data[0]
@@ -55,24 +46,24 @@ function Main_List() : JSX.Element {
             setLoading(false)
         })
         
-
+        
     }
-
+    
     const Header = () => {
         return (
-
+            
             <View style={styles.header}>
                 <Text style={[styles.headerText, {width:wp(80)}]}>출발지 / 도착지</Text>
                 <Text style={[styles.headerText, {width:wp(20)}]}>상태</Text>
             </View>
         )
     }
-
+    
     const ListItem = (row:any) => {
-       console.log("row = " + JSON.stringify(row))
-       
-       return (
-        <View style={{flexDirection:'row', marginBottom: 5, width:wp(100)}}>
+        console.log("row = " + JSON.stringify(row))
+        
+        return (
+            <View style={{flexDirection:'row', marginBottom: 5, width:wp(100)}}>
             <View style={{width:wp(80)}}>
                 <Text style={styles.textForm}>{row.item.start_addr}</Text>
                 <Text style={[styles.textForm, {borderTopWidth:0}]}>{row.item.end_addr}</Text>
@@ -86,6 +77,15 @@ function Main_List() : JSX.Element {
         </View>
        )
     }
+    
+    useEffect( () => {
+        const message = messaging().onMessage(remoteMessage => {
+            console.log('[Remote Message] ', JSON.stringify(remoteMessage))
+            requestCallList()
+        })
+
+        return message
+    })
     
     
 
